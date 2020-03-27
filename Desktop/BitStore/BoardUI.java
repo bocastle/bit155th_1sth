@@ -1,42 +1,41 @@
-package BitStore.ui;
+package Store.ui;
 
-import java.util.HashMap;
 import java.util.Scanner;
-import BitStore.util.User;
-import BitStore.*;
-import BitStore.util.*;
+
+import Store.domain.UserVO;
+import Store.util.BitStore;
+import Store.util.Board;
 
 public class BoardUI {
 	private Scanner sc;
 	private LoginUI loginUI;
-	private User currentLoginUser;
+	private UserVO currentLoginUser;
+	private Board board;
 
 	public BoardUI() {
 		sc = new Scanner(System.in);
-		// loginUI = new LoginUI();
+		loginUI = new LoginUI();
+		board = new Board();
 		currentLoginUser = BitStore.currentLoginUser;
 	}
-
-	Board bo = new Board();
 
 	public void commonBoard() {
 		while (true) {
 			switch (boardMenu()) {
-			case 1:
-				// 게시글 조회, Board클래스의 selectBoard() : Map<Integer, Board> 호출
-				bo.selectBoard();
+			case 1: // 게시글 조회,
+				board.selectBoard();
 				break;
-			case 2: // 게시글 상세 조회, Board클래스의 selectBoardByNo(int) : Board 호출
-				bo.selectBoardByNo(0);
+			case 2: // 게시글 상세 조회,
+				board.selectBoardByNo();
 				break;
 			case 3: // 게시글 등록, Board클래스의 insertBoard(Board)
-				bo.insertBoard();
+				board.insertBoard();
 				break;
-			case 4: // 게시글 수정, Board클래스의 updateBoard(Board) :
-				bo.updateBoard();
+			case 4: // 게시글 수정, Board클래스의 updateBoard(Board) : boolean 호출
+				board.updateBoard();
 				break;
-			case 5: // 게시글 삭제, Board클래스의 deleteBoard(int) :
-				bo.deleteBoard();
+			case 5: // 게시글 삭제, Board클래스의 deleteBoard(int) : boolean 호출
+				board.deleteBoard();
 				break;
 			case 6: // 돌아가기
 				if (currentLoginUser.getID().equals("admin")) { // 현재 로그인한 사용자가 관리자라면
@@ -59,6 +58,7 @@ public class BoardUI {
 	}
 
 	private int boardMenu() {
+		int inputNum = 0;
 		System.out.println("-----------------");
 		System.out.println("1. 게시글 조회");
 		System.out.println("2. 게시글 상세 조회");
@@ -69,7 +69,16 @@ public class BoardUI {
 		System.out.println("0. 종료");
 		System.out.println("-----------------");
 		System.out.print("메뉴 중 처리할 항목을 선택하세요 : ");
-		return Integer.parseInt(sc.nextLine());
+		
+		try {
+			inputNum = Integer.parseInt(sc.nextLine());
+			
+		}catch (Exception e) {
+			System.out.println("잘못입력하셨습니다. ");
+			boardMenu();
+			
+		}
+		return inputNum;
 	}
 
 }
